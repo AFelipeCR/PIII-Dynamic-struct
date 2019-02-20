@@ -11,6 +11,7 @@ import java.util.Iterator;
  */
 public class SimpleList<T> implements Iterable<T> {
 	protected Node<T> head;
+	private int size;
 	private Comparator<T> comparator;
 
 	/**
@@ -19,6 +20,7 @@ public class SimpleList<T> implements Iterable<T> {
 	public SimpleList() {
 		this.comparator = null;
 		this.head = null;
+		this.size = 0;
 	}
 
 	/**
@@ -29,6 +31,7 @@ public class SimpleList<T> implements Iterable<T> {
 	public SimpleList(Comparator<T> comparator) {
 		this.comparator = comparator;
 		this.head = null;
+		this.size = 0;
 	}
 
 	/**
@@ -38,6 +41,7 @@ public class SimpleList<T> implements Iterable<T> {
 	 */
 	public SimpleList(SimpleList<T> list) {
 		this.head = list.head;
+		this.size = 0;
 	}
 
 	/**
@@ -57,6 +61,12 @@ public class SimpleList<T> implements Iterable<T> {
 		}
 	}
 
+	public void add(T... datas) {
+		for (T data : datas) {
+			this.add(data);
+		}
+	}
+	
 	/**
 	 * Añade el elemento entrante a la lista
 	 * 
@@ -67,6 +77,7 @@ public class SimpleList<T> implements Iterable<T> {
 			this.addLast(data);
 		else
 			this.addSort(data);
+		this.size++;
 	}
 
 	/**
@@ -98,7 +109,7 @@ public class SimpleList<T> implements Iterable<T> {
 	 * @param index ubicacion en la lista
 	 * @return dato
 	 */
-	protected T get(int index) {
+	public T get(int index) {
 		Node<T> aux = head;
 		for (int i = 0; i < index; i++) {
 			aux = aux.next;
@@ -144,6 +155,7 @@ public class SimpleList<T> implements Iterable<T> {
 					aux = aux.next;
 				}
 			}
+		this.size--;
 	}
 
 	/**
@@ -247,6 +259,10 @@ public class SimpleList<T> implements Iterable<T> {
 
 	public void clean() {
 		this.head = null;
+	}
+
+	public int size() {
+		return size;
 	}
 
 	@Override
