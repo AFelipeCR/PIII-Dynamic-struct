@@ -40,8 +40,11 @@ public class SimpleList<T> implements Iterable<T> {
 	 * @param list una lista ya creada
 	 */
 	public SimpleList(SimpleList<T> list) {
-		this.head = list.head;
-		this.size = 0;
+		if (list != null)
+			if (list.head != null) {
+				this.head = list.head;
+				this.size = list.size;
+			}
 	}
 
 	/**
@@ -61,12 +64,6 @@ public class SimpleList<T> implements Iterable<T> {
 		}
 	}
 
-	public void add(T... datas) {
-		for (T data : datas) {
-			this.add(data);
-		}
-	}
-	
 	/**
 	 * Añade el elemento entrante a la lista
 	 * 
@@ -115,6 +112,33 @@ public class SimpleList<T> implements Iterable<T> {
 			aux = aux.next;
 		}
 		return aux.data;
+	}
+
+	/**
+	 * Obtiene el dato alojado en cierta posicion
+	 * 
+	 * @param index ubicacion en la lista
+	 * @return dato
+	 */
+	public int indexOf(T data) {
+		Node<T> aux = this.head;
+		int i = 0;
+		if (this.comparator != null)
+			while (aux != null) {
+				if (this.comparator.compare(data, aux.data) == 0)
+					return i;
+				aux = aux.next;
+				i++;
+			}
+		else {
+			while (aux != null) {
+				if (data == aux.data)
+					return i;
+				aux = aux.next;
+				i++;
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -182,12 +206,32 @@ public class SimpleList<T> implements Iterable<T> {
 	 * @param data dato a analizar
 	 * @return resultado de condicion
 	 */
-	public boolean isInList(T data) {
+	public int contains(T data, Comparator<T> c) {
+		int index = 0;
 		Node<T> aux = this.head;
 		while (aux != null) {
-			if (aux.data.equals(data)) {
+			if (c.compare(aux.data, data) == 0)
+				return index;
+			aux = aux.next;
+			index++;
+		}
+		return -1;
+	}
+
+	/**
+	 * Muestra si un objeto esta en la lista
+	 * 
+	 * @param data dato a analizar
+	 * @return resultado de condicion
+	 */
+	public boolean contains(T data) {
+		Node<T> aux = this.head;
+		while (aux != null) {
+			if (this.comparator != null) {
+				if (this.comparator.compare(aux.data, data) == 0)
+					return true;
+			} else if (aux.data.equals(data))
 				return true;
-			}
 			aux = aux.next;
 		}
 		return false;
@@ -259,6 +303,7 @@ public class SimpleList<T> implements Iterable<T> {
 
 	public void clean() {
 		this.head = null;
+		this.size = 0;
 	}
 
 	public int size() {
